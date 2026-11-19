@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<title>Smart Ratio Changer</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--muted:#9aabc3;--line:#263750;--accent:#62e6b5}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#101d32,#080d17 65%);font:16px system-ui,-apple-system,"Noto Sans Bengali",sans-serif;color:#eef5ff}
+main{max-width:760px;margin:auto;padding:22px 16px 48px}.brand{font-size:13px;letter-spacing:.12em;color:var(--accent);font-weight:800}
+h1{font-size:clamp(27px,6vw,40px);margin:8px 0}p{color:var(--muted);line-height:1.6}
+.card{background:#121d30eF;border:1px solid var(--line);border-radius:20px;padding:18px;margin:16px 0;box-shadow:0 14px 40px #0004}
+.drop{border:1.5px dashed #47617f;border-radius:16px;padding:25px 15px;text-align:center;background:#0d1728}
+button,.filebtn{border:0;border-radius:13px;padding:14px 18px;font-weight:750;font-size:15px;cursor:pointer}
+.primary{background:var(--accent);color:#05251b;width:100%}.secondary{background:#263750;color:#eef5ff}
+input[type=file]{display:none}.filebtn{display:inline-block;background:#263750;color:white;margin-top:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:130px}
+.option{display:flex;gap:10px;align-items:flex-start;padding:13px;border:1px solid var(--line);border-radius:13px;margin:9px 0;background:#0d1728}
+.option input{margin-top:5px;accent-color:var(--accent)}.option b{display:block}.option small{color:var(--muted);line-height:1.5}
+video{width:100%;max-height:340px;background:#05080e;border-radius:13px;margin-top:12px}
+label{font-weight:700}.hint{font-size:13px;color:var(--muted)}.status{padding:12px;border-radius:12px;background:#0b1727;color:#cce5ff;white-space:pre-wrap;min-height:44px}
+progress{width:100%;height:12px;accent-color:var(--accent);margin:10px 0}
+a.download{display:block;text-align:center;background:#62e6b5;color:#05251b;text-decoration:none;padding:15px;border-radius:13px;font-weight:800;margin-top:12px}
+button:disabled{opacity:.45;cursor:not-allowed}.tag{display:inline-block;color:#071d17;background:#62e6b5;padding:4px 9px;border-radius:99px;font-size:12px;font-weight:800}
+footer{font-size:12px;color:#8192aa;text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">SMART VIDEO TOOLS</div>
+  <h1>ভিডিও রেশিও চেঞ্জার</h1>
+  <p>16:9 ভিডিওকে এক ক্লিকে 9:16 Shorts / Reels ফরম্যাটে বদলান। স্মার্ট ক্রপ অথবা ব্লার-ব্যাকগ্রাউন্ড—দুই পদ্ধতিই আছে।</p>
+
+  <section class="card">
+    <h2>১. ভিডিও নির্বাচন করুন</h2>
+    <div class="drop">
+      <div style="font-size:34px">🎬</div>
+      <b>আপনার ভিডিও এখানে যোগ করুন</b>
+      <div class="hint">MP4, MOV, WEBM — সম্ভব হলে ছোট ভিডিও দিয়ে শুরু করুন</div>
+      <label class="filebtn" for="videoFile">ভিডিও বেছে নিন</label>
+      <input id="videoFile" type="file" accept="video/*">
+    </div>
+    <div id="fileInfo" class="hint" style="margin-top:10px">এখনো কোনো ভিডিও নির্বাচন করা হয়নি।</div>
+    <video id="preview" controls playsinline hidden></video>
+  </section>
+
+  <section class="card">
+    <h2>২. আউটপুট পদ্ধতি</h2>
+    <label class="option"><input type="radio" name="mode" value="crop" checked><span><b>স্মার্ট ক্রপ <span class="tag">দ্রুত</span></b><small>ভিডিওর মাঝের অংশ কেটে 9:16 করবে। মূল ভিডিওর অডিও থাকবে। প্রান্তের কিছু অংশ বাদ যেতে পারে।</small></span></label>
+    <label class="option"><input type="radio" name="mode" value="blur"><span><b>ব্লার ব্যাকগ্রাউন্ড <span class="tag">সম্পূর্ণ ফ্রেম</span></b><small>মূল ভিডিও সামনে থাকবে, পেছনে একই ভিডিওর বড় ব্লার করা ব্যাকগ্রাউন্ড থাকবে। এতে দৃশ্যের পাশের অংশও দেখা যাবে।</small></span></label>
+    <p class="hint">নোট: এই সংস্করণে জেনারেটিভ AI দিয়ে নতুন দৃশ্য আঁকা হয় না। ব্লার ব্যাকগ্রাউন্ড হলো লোকাল ভিডিও-প্রসেসিং পদ্ধতি।</p>
+  </section>
+
+  <section class="card">
+    <h2>৩. ভিডিও তৈরি করুন</h2>
+    <div class="row">
+      <div><label for="quality">রেজোলিউশন</label><select id="quality" style="width:100%;padding:13px;border-radius:12px;background:#0d1728;color:white;border:1px solid #344963;margin-top:8px"><option value="720">720 × 1280 (মোবাইলে সহজ)</option><option value="1080" selected>1080 × 1920 (Full HD)</option></select></div>
+      <div><label for="fps">ফ্রেম রেট</label><select id="fps" style="width:100%;padding:13px;border-radius:12px;background:#0d1728;color:white;border:1px solid #344963;margin-top:8px"><option>24</option><option selected>30</option><option>60</option></select></div>
+    </div>
+    <button id="convertBtn" class="primary" style="margin-top:16px" disabled>এক ক্লিকে 9:16 তৈরি করুন</button>
+    <progress id="progress" max="100" value="0" hidden></progress>
+    <div id="status" class="status" style="margin-top:12px">ভিডিও নির্বাচন করার পর তৈরি বাটন চালু হবে। প্রথমবার FFmpeg ইঞ্জিন লোড হতে কিছুটা সময় লাগতে পারে।</div>
+    <a id="download" class="download" hidden>তৈরি ভিডিও ডাউনলোড করুন</a>
+  </section>
+
+  <section class="card">
+    <h3>গুরুত্বপূর্ণ সীমাবদ্ধতা</h3>
+    <p class="hint">এই অ্যাপ ভিডিও আপনার ব্রাউজারেই প্রসেস করে; কোনো সার্ভারে আপলোড করে না। তবে বড়/4K ভিডিওতে মোবাইলের RAM ও ব্রাউজার সীমাবদ্ধতার কারণে প্রসেসিং ব্যর্থ বা ধীর হতে পারে। AI দিয়ে ফাঁকা অংশ বাস্তবসম্মতভাবে নতুন করে তৈরি করতে আলাদা AI API/সার্ভার এবং API key লাগবে—GitHub Pages একা তা করতে পারে না।</p>
+  </section>
+  <footer>Smart Ratio Changer · GitHub Pages ready · প্রথমবার ব্যবহারে ইন্টারনেট লাগবে</footer>
+</main>
+<script type="module">
+import { FFmpeg } from "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js";
+import { toBlobURL } from "https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.2/dist/esm/index.js";
+
+const $ = id => document.getElementById(id);
+const fileInput=$("videoFile"), preview=$("preview"), convertBtn=$("convertBtn");
+let selectedFile=null, ffmpeg=null, busy=false, outputUrl=null;
+
+fileInput.addEventListener("change",()=>{
+  selectedFile=fileInput.files?.[0]||null;
+  $("download").hidden=true;
+  if(outputUrl){URL.revokeObjectURL(outputUrl);outputUrl=null;}
+  if(!selectedFile){convertBtn.disabled=true;return;}
+  preview.src=URL.createObjectURL(selectedFile); preview.hidden=false;
+  $("fileInfo").textContent=`${selectedFile.name} · ${(selectedFile.size/1024/1024).toFixed(1)} MB`;
+  $("status").textContent="ভিডিও প্রস্তুত। এখন রেশিও পদ্ধতি বেছে নিয়ে বাটনে চাপ দিন।";
+  convertBtn.disabled=false;
+});
+
+async function loadEngine(){
+  if(ffmpeg) return ffmpeg;
+  $("status").textContent="ভিডিও ইঞ্জিন লোড হচ্ছে… প্রথমবার একটু অপেক্ষা করুন।";
+  ffmpeg=new FFmpeg();
+  ffmpeg.on("progress",({progress})=>{
+    if(Number.isFinite(progress)) $("progress").value=Math.max(0,Math.min(99,Math.round(progress*100)));
+  });
+  ffmpeg.on("log",({message})=>{
+    if(message && /error/i.test(message)) $("status").textContent="প্রসেসিং বার্তা: "+message.slice(0,220);
+  });
+  const base="https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd";
+  await ffmpeg.load({
+    coreURL: await toBlobURL(`${base}/ffmpeg-core.js`,"text/javascript"),
+    wasmURL: await toBlobURL(`${base}/ffmpeg-core.wasm`,"application/wasm")
+  });
+  return ffmpeg;
+}
+
+convertBtn.addEventListener("click", async()=>{
+  if(!selectedFile||busy)return;
+  busy=true;convertBtn.disabled=true;$("download").hidden=true;$("progress").hidden=false;$("progress").value=0;
+  try{
+    const engine=await loadEngine();
+    $("status").textContent="ভিডিও প্রসেস হচ্ছে… এই সময়ে অ্যাপ বন্ধ করবেন না।";
+    const ext=(selectedFile.name.split(".").pop()||"mp4").toLowerCase().replace(/[^a-z0-9]/g,"")||"mp4";
+    const inputName=`input.${ext}`, outputName="vertical-output.mp4";
+    await engine.writeFile(inputName,new Uint8Array(await selectedFile.arrayBuffer()));
+    const h=Number($("quality").value), w=Math.round(h*9/16), fps=Number($("fps").value);
+    const mode=document.querySelector('input[name="mode"]:checked').value;
+    let vf;
+    if(mode==="crop"){
+      vf=`scale=${w}:${h}:force_original_aspect_ratio=increase,crop=${w}:${h},setsar=1,fps=${fps}`;
+    }else{
+      vf=`[0:v]split=2[bg][fg];[bg]scale=${w}:${h}:force_original_aspect_ratio=increase,crop=${w}:${h},boxblur=24:2[blur];[fg]scale=${w}:${h}:force_original_aspect_ratio=decrease[front];[blur][front]overlay=(W-w)/2:(H-h)/2,setsar=1,fps=${fps}`;
+    }
+    const args=["-i",inputName];
+    if(mode==="blur") args.push("-filter_complex",vf);
+    else args.push("-vf",vf);
+    args.push("-map","0:a?","-c:v","libx264","-preset","ultrafast","-crf","21","-pix_fmt","yuv420p","-c:a","aac","-b:a","128k","-movflags","+faststart","-r",String(fps),outputName);
+    await engine.exec(args);
+    const data=await engine.readFile(outputName);
+    const blob=new Blob([data.buffer],{type:"video/mp4"});
+    outputUrl=URL.createObjectURL(blob);
+    const link=$("download");link.href=outputUrl;link.download=`${selectedFile.name.replace(/\.[^.]+$/,"")}-9x16.mp4`;link.hidden=false;
+    $("status").textContent="সম্পন্ন! আপনার 9:16 ভিডিও তৈরি হয়েছে। নিচের ডাউনলোড বাটনে চাপ দিন।";
+    $("progress").value=100;
+    try{await engine.deleteFile(inputName);await engine.deleteFile(outputName);}catch{}
+  }catch(err){
+    console.error(err);
+    $("status").textContent="ভিডিও তৈরি করা যায়নি। ছোট MP4 ভিডিও দিয়ে চেষ্টা করুন, Chrome ব্যবহার করুন, এবং ফোনে পর্যাপ্ত খালি RAM/স্টোরেজ রাখুন। বিস্তারিত: "+(err?.message||String(err));
+  }finally{busy=false;convertBtn.disabled=!selectedFile;}
+});
+</script>
+</body>
+</html>
